@@ -6,9 +6,73 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="description" content="Helloworld : Greeting">
     <title>Helloworld</title>
+    <style type="text/css">
+        .sign
+        {
+            background-color: White;
+        }
+        .signcopy
+        {
+        }
+        #canvasid1
+        {
+            cursor: url(Pen.cur), default;
+        }
+        #txtCanvas1
+        {
+            display: none;
+            width: 250px;
+            height: 46px;
+            font-size: 16pt;
+            font-family: Arial;
+            border-left: 0;
+            border-right: 0;
+            border-top: 0;
+            border-bottom-color: Black;
+        }
+        #txtCanvas1:focus
+        {
+            outline: 0;
+        }
+    </style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="Signature.js" type="text/javascript"></script>
   </head>
 
-  <body>
-      Hello World
-  </body>
+  <body onload="canvas_load();">
+    <div>
+        <h1>
+            Signature</h1>
+    </div>
+    <div align="center">
+        <h1>
+            Sign Here</h1>
+         
+        <canvas id="canvasid1" class="sign" width="250" height="50"></canvas>
+        <input id="txtCanvas1" type="text" /> 
+        <div>
+            <input id="checkBoxCanvas" type="checkbox" onchange="chechBoxCanvas_onchange();" />select
+            to type</div>
+        <h1>
+            Sign Here</h1>
+        <canvas id="canvasid2" class="signcopy" width="250" height="50"></canvas>
+        <h1>
+            Sign Here</h1>
+        <canvas id="canvasid3" class="signcopy" width="250" height="50"></canvas>
+        <br />
+        <table>
+            <tr>
+                <td>
+                    <button id="ApplyButton" onclick="ApplyButton_onclick();">
+                        APPLY</button>
+                </td>
+                <td>
+                    <button id="Clear" onclick="Clear_onclick();">
+                        CLEAR</button>
+                </td>
+            </tr>
+        </table>
+        <img id="MyPix" />
+    </div>
+</body>
 </html>
