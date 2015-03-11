@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Angular Examples</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</head>
+<body ng-app="App">
+    <div class="container-fluid">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a style="font-size: 36px" href="#/home">Home</a></li>
+                            <li><a style="font-size: 36px" href="#/settings">Settings</a></li>
+                            <li><a style="font-size: 36px" href="#/about">About</a></li>
+                            <li><a style="font-size: 36px" href="#/data">DataFromRoute</a></li>
+                            <li><a style="font-size: 36px" href="#/data/123">DataFromQueryString</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div ng-view=""></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/ng-template" id="home.html">
+    <div class="well" align="center" style="padding:0px;">
+        <span style="font-size: 60px;">{{informationsystem}}</span>
+    </div>
+    <div>       
+       <form role="form" class="form-horizontal">
+            <div class="form-group">
+                <label  for="input" class="col-md-1 control-label" style="font-size:18px;">Search:</label>
+                <div class="col-md-4">
+                    <input class="form-control" type="text" ng-model="query" />
+                </div>
+                <input class="btn btn-danger col-md-1" type="button" ng-click="query=''" value="Clear" />  
+            </div>            
+        </form>  
+        <div style="padding: 20px">
+            <table class="table table-hover table-bordered" cellspacing="0" cellpadding="10" width="100%" >
+                <thead>
+                    <tr class="well">
+                        <th align="center" style="text-align: center;font-size:18px;">Id</th>
+                        <th align="center" style="text-align: center;font-size:18px;">Name</th>
+                        <th align="center" style="text-align: center;font-size:18px;">Team</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="emp in EmpData | filter:query | orderBy:'name'">
+                        <td align="center">{{emp.id}}</td>
+                        <td align="center">{{emp.name}}</td>
+                        <td align="center">{{emp.team}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--<ul>
+        <li ng-repeat="emp in EmpData | filter:query | orderBy:'id'">Id:{{emp.id}}  Name:{{emp.name}}</li>
+    </ul>-->
+        <div class="well col-md-12">    
+            <button class="btn btn-success" type="button" ng-click="OperationUsingFactory()">Operation Using Factory</button>
+            <button class="btn btn-success" type="button" ng-click="OperationUsingService()">Operation Using Service</button>
+            <button class="btn btn-success" type="button" ng-controller="AppModuleCtrl" ng-click="AppModuleMethod()">Operation Using External Module</button>
+        </div>
+     
+
+
+    Without Filter:<b>{{data}}</b><br />
+    With Custom Filter:<b>{{data|customFilter}}</b>
+    <br />
+    </script>
+    <script type="text/ng-template" id="settings.html">
+       <h2>{{message}}</h2>
+    </script>
+
+    <script type="text/ng-template" id="about.html">
+        <h2>{{message}}</h2>
+    </script>
+
+    <script type="text/ng-template" id="data.html">
+        queryStringData:<h2>{{queryStringData}}</h2>
+        valueFromRoute:<h2>{{valueFromRoute}}</h2>
+    </script>
+
+    <script type="text/javascript">
+        var App = angular.module('App', ['ngRoute', 'AppModule']);
+
+        App.config(['$routeProvider',
+            function ($routeProvider) {
+                $routeProvider.
+                    when('/home', {
+                        templateUrl: 'home.html',
+                        controller: 'AppCtrl'
+                    }).
+                    when('/settings', {
+                        templateUrl: 'settings.html',
+                        controller: 'settings'
+                    }).
+                    when('/about', {
+                        templateUrl: 'about.html',
+                        controller: 'about'
+                    }).
+                    when('/data', {
+                        templateUrl: 'data.html',
+                        controller: 'data',
+                        value: 1
+                    }).
+                    when('/data/:id', {
+                        templateUrl: 'data.html',
+                        controller: 'data'
+                    }).
+                    otherwise({
+                        redirectTo: '/home'
+                    });
+            }]);
+
+        App.controller('settings', function ($scope, $route) {
+            $scope.message = "Settings";
+        });
+
+        App.controller('about', function ($scope, $route) {
+            $scope.message = "About";
+        });
+
+        App.controller('data', function ($scope, $route, $routeParams) {
+            $scope.queryStringData = $routeParams.id || "No id in Query String";
+            $scope.valueFromRoute = $route.current.value || "No value from Route";
+        });
+
+        App.controller('AppCtrl', function ($scope, AppFactory, AppService) {
+
+            $scope.informationsystem = "Information System";
+
+            $scope.data = "Data";
+
+            $scope.query = "";
+
+            $scope.EmpData = [{
+                id: 1,
+                name: "Neo",
+                team: "Matrix"
+            }, {
+                id: 5,
+                name: "Morpheus",
+                team: "Matrix"
+            }, {
+                id: 3,
+                name: "Raja",
+                team: "Sky"
+            }, {
+                id: 2,
+                name: "Nairobi",
+                team: "Matrix"
+            }, {
+                id: 6,
+                name: "Stark",
+                team: "Marvel"
+            }, {
+                id: 4,
+                name: "Pepper",
+                team: "Marvel"
+            }];
+
+            $scope.OperationUsingFactory = function () {
+                AppFactory.factoryMethod();
+            };
+
+            $scope.OperationUsingService = function () {
+                AppService.serviceMethod();
+            };
+
+        });
+
+        App.factory('AppFactory', function () {
+            return {
+                factoryMethod: function () {
+                    alert('factory method');
+                }
+            };
+        });
+
+        App.filter('customFilter', function () {
+            return function (data) {
+                // alert('customFilter');
+                return "Filtered Data";
+            };
+        });
+
+        App.service('AppService', function () {
+            this.serviceMethod = function () {
+                alert('service method');
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
+        //  setTimeout(function () {
+        var AppModule = angular.module('AppModule', []);
+
+        AppModule.controller('AppModuleCtrl', function ($scope) {
+            $scope.AppModuleMethod = function () {
+                alert('Operation Using External Module');
+            };
+        });
+        //   }, 2000);
+    </script>
+</body>
+</html>
