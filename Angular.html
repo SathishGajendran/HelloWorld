@@ -2,9 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Angular Examples</title>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular-touch.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular-animate.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 <body ng-app="App">
@@ -82,6 +84,8 @@
 
     <script type="text/ng-template" id="about.html">
         <h2>{{message}}</h2>
+         <h2><span my-anim="disp">Animation</span></h2>
+        <button class="btn btn-success" type="button" ng-click="btnClick($event)">Click</button>
     </script>
 
     <script type="text/ng-template" id="data.html">
@@ -90,7 +94,7 @@
     </script>
 
     <script type="text/javascript">
-        var App = angular.module('App', ['ngRoute', 'AppModule']);
+        var App = angular.module('App', ['ngRoute', 'AppModule', 'ngTouch', 'ngAnimate']);
 
         App.config(['$routeProvider',
             function ($routeProvider) {
@@ -125,8 +129,62 @@
             $scope.message = "Settings";
         });
 
+        App.animation('.red', function () {
+            return {
+                addClass: function (ele, className, done) {
+                    //console.log('added');
+                    //console.log(ele);
+                    //console.log(className);
+                    //console.log(done());
+                    ele[0].style.color = "red";
+                    ele[0].style.fontSize = '';
+                    ele[0].style.transition = "color 1s, font-size 1s";
+                },
+                removeClass: function (ele, className, done) {
+                    //console.log('removed');
+                    //console.log(ele);
+                    //console.log(className);
+                    //console.log(done());
+                    ele[0].style.color = "orange";
+                    ele[0].style.fontSize = '112px';
+                    ele[0].style.transition = "color 1s, font-size 1s";
+                }
+            };
+        });
+
+        App.directive('myAnim', function ($animate) {
+            return {
+                restrict: 'A',
+                link: function ($scope, ele, attr) {                    
+                    $scope.$watch(attr.myAnim, function (newvalue, oldvalue) {
+                        if (newvalue) {
+                            //ele.css('color', 'green');
+                            //ele[0].style.color = "green";
+                            //ele[0].style.opacity = 1;
+                            //ele[0].style.transition = "color 1s";
+                            //  $animate.addClass(ele, 'green');
+                            $animate.removeClass(ele, 'red');
+                        }
+                        else {
+                            // ele.css('color', 'red');
+                            //ele[0].style.color = "red";
+                            //ele[0].style.opacity = 1;
+                            //ele[0].style.transition = "color 1s";
+                            $animate.addClass(ele, 'red');
+                            //   $animate.removeClass(ele, 'green');
+                        }
+                    });
+
+                }
+            };
+        });
+
         App.controller('about', function ($scope, $route) {
             $scope.message = "About";
+            $scope.disp = false;
+            $scope.btnClick = function (e) {
+                $scope.disp = !$scope.disp;
+            };
         });
 
         App.controller('data', function ($scope, $route, $routeParams) {
