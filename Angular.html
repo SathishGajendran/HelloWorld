@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Angular Examples</title>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />    
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular-touch.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.min.js"></script>
@@ -76,6 +76,7 @@
 
     Without Filter:<b>{{data}}</b><br />
     With Custom Filter:<b>{{data|customFilter}}</b>
+    UnitTesting:{{query|reverseFilter}}
     <br />
     </script>
     <script type="text/ng-template" id="settings.html">
@@ -86,6 +87,20 @@
         <h2>{{message}}</h2>
          <h2><span my-anim="disp">Animation</span></h2>
         <button class="btn btn-success" type="button" ng-click="btnClick($event)">Click</button>
+    </script>
+
+    <script type="text/ng-template" id="datascroll.html">
+        <h2>{{message}}</h2>
+         <div id="divImage" custom-scroll
+            style="margin-top: 20px; width: 600px;border: 1px solid gray">
+            <div id="content" style="background-color: aliceblue;right:0px; position: relative;display: inline-flex;-webkit-user-select: none;">
+                <img draggable="false" style="height: 120px; padding: 15px; margin-left: 10px; width: 120px;" ng-repeat="image in imageData" ng-src="{{image[1]}}" />
+                <!--ng-src="data:image/gif;base64,{{image}}" overflow-x: auto; overflow-y: hidden;ng-src="data:image/gif;base64,{{image[1]}}-->
+            </div>
+        </div>
+        <div>
+            Changing Scroll Direction Dynamically for Desktop and Touch Devices
+        </div>        
     </script>
 
     <script type="text/ng-template" id="data.html">
@@ -120,10 +135,30 @@
                         templateUrl: 'data.html',
                         controller: 'data'
                     }).
+                    when('/data/custom/scroll', {
+                        templateUrl: 'datascroll.html',
+                        controller: 'datascroll'
+                    }).
                     otherwise({
                         redirectTo: '/home'
                     });
             }]);
+
+        App.controller('datascroll', function ($scope, $route) {
+            $scope.message = "Custom Scroll";
+            $scope.imageData = [
+                [1, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/TEIDE.JPG/220px-TEIDE.JPG"],
+                [2, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/TEIDE.JPG/220px-TEIDE.JPG"],
+                [3, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/TEIDE.JPG/220px-TEIDE.JPG"],
+                [4, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/TEIDE.JPG/220px-TEIDE.JPG"],
+                [5, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/TEIDE.JPG/220px-TEIDE.JPG"],
+                [6, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/TEIDE.JPG/220px-TEIDE.JPG"],
+                [7, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/TEIDE.JPG/220px-TEIDE.JPG"],
+                [8, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/TEIDE.JPG/220px-TEIDE.JPG"],
+                [9, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/TEIDE.JPG/220px-TEIDE.JPG"],
+                [10, "http://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/TEIDE.JPG/220px-TEIDE.JPG"]
+            ];
+        });
 
         App.controller('settings', function ($scope, $route) {
             $scope.message = "Settings";
@@ -155,7 +190,7 @@
         App.directive('myAnim', function ($animate) {
             return {
                 restrict: 'A',
-                link: function ($scope, ele, attr) {                    
+                link: function ($scope, ele, attr) {
                     $scope.$watch(attr.myAnim, function (newvalue, oldvalue) {
                         if (newvalue) {
                             //ele.css('color', 'green');
@@ -175,6 +210,69 @@
                         }
                     });
 
+                }
+            };
+        });
+
+        App.directive('customScroll', function ($document) {
+            return {
+                restrict: 'A',
+                link: function ($scope, ele, attr) {
+                    ele[0].style.overflow = "hidden";
+                    var flag = false, downX, currentX, currentRight, currentLeft;
+                    var mousedown = function (e) {
+                        flag = true;
+                        downX = e.clientX || e.touches[0].clientX;
+                        currentX = e.clientX || e.touches[0].clientX;
+                        currentRight = ele[0].querySelector('div').style.right;
+                    };
+                    var mousemove = function (e) {
+                        if (flag) {
+                            currentX = e.clientX || e.touches[0].clientX;
+                            var currentRightValue = (parseInt(currentRight.substring(0, currentRight.length - 2)));
+                            var ScrollHeight = ele[0].querySelector('div').offsetWidth - ele[0].offsetWidth;
+                            var elementStyle = ele[0].querySelector('div').style;
+                            if (currentX < downX) {
+                                if (e.type == "touchmove") {
+                                    if ((currentRightValue + (downX - currentX)) >= 0 && (currentRightValue + (downX - currentX)) <= ScrollHeight) {
+                                        elementStyle.right = currentRightValue + (downX - currentX) + 'px';
+                                    } else if ((currentRightValue + (downX - currentX)) > ScrollHeight) {
+                                        elementStyle.right = ScrollHeight + 'px';
+                                    }
+                                } else {
+                                    if (currentRightValue + (currentX - downX) > 0) {
+                                        elementStyle.right = currentRightValue + (currentX - downX) + 'px';
+                                    } else {
+                                        elementStyle.right = '0px';
+                                    }
+                                }
+                            }
+                            else if (currentX > downX) {
+                                if (e.type == "touchmove") {
+                                    if ((currentRightValue - (currentX - downX)) >= 0 && (currentRightValue - (currentX - downX)) <= ScrollHeight) {
+                                        elementStyle.right = currentRightValue - (currentX - downX) + 'px';
+                                    } else if ((currentRightValue - (currentX - downX)) < 0) {
+                                        elementStyle.right = '0px';
+                                    }
+                                } else {
+                                    if ((currentRightValue - (downX - currentX)) < ScrollHeight) {
+                                        elementStyle.right = currentRightValue - (downX - currentX) + 'px';
+                                    } else {
+                                        elementStyle.right = ScrollHeight + 'px';
+                                    }
+                                }
+                            }
+                        }
+                    };
+                    var mouseup = function (e) {
+                        flag = false;
+                    };
+                    ele[0].onmousedown = mousedown;
+                    ele[0].addEventListener('touchstart', mousedown);
+                    ele[0].onmousemove = mousemove;
+                    ele[0].addEventListener('touchmove', mousemove);
+                    $document[0].onmouseup = mouseup;
+                    $document[0].addEventListener('touchup', mouseup);
                 }
             };
         });
@@ -251,11 +349,18 @@
             };
         });
 
+        App.filter('reverseFilter', function () {
+            return function (data) {
+                return data.split('').reverse().join('');
+            };
+        });
+
         App.service('AppService', function () {
             this.serviceMethod = function () {
                 alert('service method');
             }
         });
+
     </script>
 
     <script type="text/javascript">
@@ -269,5 +374,17 @@
         });
         //   }, 2000);
     </script>
+
+<!--    <script>
+        describe('filter', function () {
+            beforeEach(module('App'));
+            describe('reverseFilter', function () {
+                it('should revese a string', inject(function (reverseFilter) {
+                    expect(reverseFilter('ABC').toEqual('CBA'));
+                }));
+            });
+        });
+    </script>-->
+
 </body>
 </html>
