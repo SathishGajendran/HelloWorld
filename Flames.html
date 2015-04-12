@@ -46,10 +46,11 @@
     <script type="text/javascript">
         var app = angular.module('App', []);
         app.controller('appCtrl', function ($scope) {
-            var n1=$scope.a,n2=$scope.b;
+           
 
             var x,y,i,j,k,l,flag=0,count=0,v,n,temp;
             $scope.findR = function () {
+                 var n1=$scope.a,n2=$scope.b;
                 if (n1!= null && n2 != null) {
                    // $scope.rel = "asdf";
                     for(i=0;i<n1.length;i++)
