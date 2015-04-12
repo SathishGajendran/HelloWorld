@@ -46,9 +46,48 @@
     <script type="text/javascript">
         var app = angular.module('App', []);
         app.controller('appCtrl', function ($scope) {
+            var n1=$scope.a,n2=$scope.b;
+
+            var x,y,i,j,k,l,flag=0,count=0,v,n,temp;
             $scope.findR = function () {
-                if ($scope.a != null && $scope.b != null) {
-                    $scope.rel = "asdf";
+                if (n1!= null && n2 != null) {
+                   // $scope.rel = "asdf";
+                    for(i=0;i<n1.length;i++)
+{
+for(j=0;j<n2.length;j++)
+{
+if(n1[i]==n2[j])
+{
+temp=n1[i];
+flag=1;
+}
+}
+if(flag==1)
+{
+for(k=0;k<n1.length;k++)
+{
+if(temp==n1[k])
+n1[k]=null;
+}
+for(l=0;l<n2.length;l++)
+{
+if(temp==n2[l])
+n2[l]=null;
+}
+}
+flag=0;
+}
+for(v=0;v<n1.length;v++)
+{
+if(n1[v]!=null)
+count++;
+}
+for(v=0;v<n2.length;v++)
+{
+if(n2[v]!=null)
+count++;
+}
+$scope.rel = count;
                 } else {
                     alert('Input values are invalid')
                 }
