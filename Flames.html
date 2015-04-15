@@ -8,7 +8,7 @@
 
 </head>
 <body ng-app="App" ng-controller="appCtrl">
-    <div class="container" style="margin: 200px;">
+    <div class="container" style="margin-top: 10%;">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4>app</h4>
@@ -19,13 +19,13 @@
                         <div class="form-group">
                             <label class="control-label col-md-3">name</label>
                             <div class="col-md-9">
-                                <input type="text" ng-model="a" class="form-control" pattern="[a-zA-Z]+"  maxlength="26" />
+                                <input type="text" ng-model="a" class="form-control" maxlength="26" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3">address</label>
                             <div class="col-md-9">
-                                <input type="text" ng-model="b" class="form-control"  pattern="[a-zA-Z]+" maxlength="26" />
+                                <input type="text" ng-model="b" class="form-control" maxlength="26" />.
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -46,79 +46,68 @@
     <script type="text/javascript">
         var app = angular.module('App', []);
         app.controller('appCtrl', function ($scope) {
-           
-
-            var x,y,i,j,k,l,flag=0,count=0,v,n,temp;
             $scope.findR = function () {
-                 var n1=$scope.a,n2=$scope.b;
-                if (n1!= null && n2 != null) {
-                   // $scope.rel = "asdf";
-                    for(i=0;i<n1.length;i++)
-{
-for(j=0;j<n2.length;j++)
-{
-if(n1[i]==n2[j])
-{
-temp=n1[i];
-flag=1;
-}
-}
-if(flag==1)
-{
-for(k=0;k<n1.length;k++)
-{
-if(temp==n1[k])
-n1[k]=null;
-}
-for(l=0;l<n2.length;l++)
-{
-if(temp==n2[l])
-n2[l]=null;
-}
-}
-flag=0;
-}
-for(v=0;v<n1.length;v++)
-{
-if(n1[v]!=null)
-count++;
-}
-for(v=0;v<n2.length;v++)
-{
-if(n2[v]!=null)
-count++;
-}
-$scope.rel = count;
-switch(count)
-{
-case 0:cout<<"\nRelation=______________";break;
-case 1:cout<<"\nRelation=Brother or sister";break;
-case 2:cout<<"\nRelation=Enemy";break;
-case 3:cout<<"\nRelation=Friend";break;
-case 4:cout<<"\nRelation=Enemy";break;
-case 5:cout<<"\nRelation=Friend";break;
-case 6:cout<<"\nRelation=Marriage";break;
-case 7:cout<<"\nRelation=Enemy";break;
-case 8:cout<<"\nRelation=Affection";break;
-case 9:cout<<"\nRelation=Enemy";break;
-case 10:cout<<"\nRelation=Love";break;
-case 11:cout<<"\nRelation=Marriage";break;
-case 12:cout<<"\nRelation=Affection";break;
-case 13:cout<<"\nRelation=Affection";break;
-case 14:cout<<"\nRelation=Friend";break;
-case 15:cout<<"\nRelation=Marriage";break;
-case 16:cout<<"\nRelation=Friend";break;
-case 17:cout<<"\nRelation=Affection";break;
-case 18:cout<<"\nRelation=Friend";break;
-case 19:cout<<"\nRelation=Love";break;
-case 20:cout<<"\nRelation=Enemy";break;
-case 21:cout<<"\nRelation=Friend";break;
-case 22:cout<<"\nRelation=Enemy";break;
-case 23:cout<<"\nRelation=Sister or Brother";break;
-case 24:cout<<"\nRelation=Enemy";break;
-case 25:cout<<"\nRelation=Enemy";break;
-case 26:cout<<"\nRelation=Marriage";break;
-}
+                var i, j, k, l, flag = 0, count = 0, v, n, temp;
+                var regex = /[a-zA-Z]+/;
+                if (regex.test($scope.a) && regex.test($scope.b)) {
+                    var n1 = $scope.a.split(''), n2 = $scope.b.split('');
+                    for (i = 0; i < n1.length; i++) {
+                        for (j = 0; j < n2.length; j++) {
+                            if (n1[i] == n2[j]) {
+                                temp = n1[i];
+                                flag = 1;
+                            }
+                        }
+                        if (flag == 1) {
+                            for (k = 0; k < n1.length; k++) {
+                                if (temp == n1[k])
+                                    n1[k] = null;
+                            }
+                            for (l = 0; l < n2.length; l++) {
+                                if (temp == n2[l])
+                                    n2[l] = null;
+                            }
+                        }
+                        flag = 0;
+                    }
+                    for (v = 0; v < n1.length; v++) {
+                        if (n1[v] != null)
+                            count++;
+                    }
+                    for (v = 0; v < n2.length; v++) {
+                        if (n2[v] != null)
+                            count++;
+                    }
+                   // $scope.rel = count;
+                    switch (count) {
+                        case 0: $scope.rel = "______________"; break;
+                        case 1: $scope.rel = "Brother or sister"; break;
+                        case 2: $scope.rel = "Enemy"; break;
+                        case 3: $scope.rel = "Friend"; break;
+                        case 4: $scope.rel = "Enemy"; break;
+                        case 5: $scope.rel = "Friend"; break;
+                        case 6: $scope.rel = "Marriage"; break;
+                        case 7: $scope.rel = "Enemy"; break;
+                        case 8: $scope.rel = "Affection"; break;
+                        case 9: $scope.rel = "Enemy"; break;
+                        case 10: $scope.rel = "Love"; break;
+                        case 11: $scope.rel = "Marriage"; break;
+                        case 12: $scope.rel = "Affection"; break;
+                        case 13: $scope.rel = "Affection"; break;
+                        case 14: $scope.rel = "Friend"; break;
+                        case 15: $scope.rel = "Marriage"; break;
+                        case 16: $scope.rel = "Friend"; break;
+                        case 17: $scope.rel = "Affection"; break;
+                        case 18: $scope.rel = "Friend"; break;
+                        case 19: $scope.rel = "Love"; break;
+                        case 20: $scope.rel = "Enemy"; break;
+                        case 21: $scope.rel = "Friend"; break;
+                        case 22: $scope.rel = "Enemy"; break;
+                        case 23: $scope.rel = "Sister or Brother"; break;
+                        case 24: $scope.rel = "Enemy"; break;
+                        case 25: $scope.rel = "Enemy"; break;
+                        case 26: $scope.rel = "Marriage"; break;
+                    }
                 } else {
                     alert('Input values are invalid')
                 }
