@@ -1,0 +1,82 @@
+################variable.less##################
+
+@bgcolor:lightblue;
+
+
+
+################t1.less########################
+
+@import "variable.less";
+
+html
+{
+  background-color: @bgcolor;
+}
+
+.panel, .panel-body, .panel-heading {
+  background-color: @bgcolor;
+}
+
+
+
+################variable.less##################
+
+@bgcolor:lightgreen;
+
+
+################t2.less########################
+
+@import "variable.less";
+
+html
+{
+  background-color: @bgcolor;
+}
+
+.panel, .panel-body, .panel-heading {
+  background-color: @bgcolor;
+}
+
+
+var theme1=function(){
+//        alert('t1');
+        document.getElementsByTagName('style')[0].remove();
+        var theme1Link="stylesheets/t1/t1.less";
+//        var theme1=$('<link/>',{
+//            href:theme1Link,
+//            rel:'stylesheet/less',
+//            type:'text/css'
+//        });
+        var theme1=document.createElement('link');
+        theme1.href=theme1Link;
+        theme1.rel='stylesheet/less';
+        theme1.type='text/css';
+        theme1.id='theme1';
+        less.sheets.pop();
+//        theme1.prependTo('head');
+        less.sheets.push(theme1);
+        less.refresh();
+    };
+
+
+
+var theme2=function(){
+//        alert('t2');
+        document.getElementsByTagName('style')[0].remove();
+        var theme2Link="stylesheets/t2/t2.less";
+//        var theme2=$('<link/>',{
+//            href:theme2Link,
+//            rel:'stylesheet/less',
+//            type:'text/css'
+//        });
+        var theme2=document.createElement('link');
+        theme2.href=theme2Link;
+        theme2.rel='stylesheet/less';
+        theme2.type='text/css';
+        theme2.id="theme2";
+
+//        theme2.prependTo('head');
+        less.sheets.pop();
+        less.sheets.push(theme2);
+        less.refresh();
+    };
