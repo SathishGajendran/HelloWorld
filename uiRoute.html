@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Angular Ui Route</title>
+    <script src="http://code.angularjs.org/1.2.13/angular.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+</head>
+<body ng-app="uiApp" ng-controller="uiAppCtrl">
+    <ul>
+        <li>
+            <a ui-sref="home">Home</a>
+        </li>
+        <li>
+            <a ui-sref="about">About</a>
+        </li>
+    </ul>
+    <div ui-view="myview1"></div>
+    <div ui-view="myview2"></div>
+    <script type="text/javascript">
+        angular.module('uiApp', ['ui.router'])
+            .config(['$stateProvider','$urlRouterProvider',
+                function ($stateProvider, $urlRouterProvider) {
+                    $urlRouterProvider.otherwise('/home')
+                    $stateProvider
+                        .state('home', {
+                            url: '/home',
+                            views:{
+                                "myview1":{
+                                    templateUrl: 'temp.html'
+                                },
+                                "myview2": {
+                                    template: 'My View 2'
+                                }
+                            }
+                            
+                        })
+                        .state('home.sub', {
+                            url: '/sub',
+                            template: 'Sub View'
+                        })
+                        .state('about', {
+                            url: '/about',
+                            views: {
+                                "myview1": {
+                                    template: 'About MyView1'
+                                },
+                                "myview2": {
+                                    template: 'About MyView2'
+                                }
+                            }
+                        });
+                }])
+            .controller('uiAppCtrl', function ($scope) {
+                $scope.name = "Route";
+            });
+    </script>
+</body>
+</html>
