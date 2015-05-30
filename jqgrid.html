@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>jqgrid</title>
+    <!-- JQuery CSS -->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/black-tie/jquery-ui.css" type="text/css" />
+
+    <!-- jqGrid CSS -->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jqgrid/4.6.0/css/ui.jqgrid.css" type="text/css" />
+
+
+    <!-- The actual JQuery code -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <!-- The JQuery UI code -->
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+    <!-- The jqGrid language file code-->
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jqgrid/4.6.0/js/i18n/grid.locale-en.js"></script>
+    <!-- The atual jqGrid code -->
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jqgrid/4.6.0/js/jquery.jqGrid.min.js"></script>
+</head>
+<body>
+    <div align="center" style="margin-top: 100px;">
+        <table id="grid"></table>
+        <div id="pager"></div>
+        <div style="margin-top: 15px;">
+            <input id="add" type="button" value="staticAdd" />
+            <input id="edit" type="button" value="staticEdit" />
+            <input id="delete" type="button" value="Delete" />
+            <input id="rowadd" type="button" value="RowAdd" />
+            <input id="rowedit" type="button" value="RowEdit" />
+            <input id="save" type="button" value="Save" />
+            <input id="cancel" type="button" value="Cancel" />
+            <input id="w_add" type="button" value="Add" />
+            <input id="w_edit" type="button" value="Edit" />
+            <input id="w_delete" type="button" value="Delete with alert" />
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            //alert('hi');
+            var mydata = [
+                { id: '1', name: 'AAA', age: '20', email: 'test1@test.com' },
+                { id: '2', name: 'BBB', age: '21', email: 'test2@test.com' },
+                { id: '3', name: 'CCC', age: '20', email: 'test3@test.com' },
+                { id: '4', name: 'DDD', age: '22', email: 'test4@test.com' },
+                { id: '5', name: 'EEE', age: '21', email: 'test5@test.com' },
+                { id: '6', name: 'FFF', age: '20', email: 'test6@test.com' },
+                { id: '7', name: 'GGG', age: '21', email: 'test7@test.com' },
+                { id: '8', name: 'HHH', age: '21', email: 'test8@test.com' },
+                { id: '9', name: 'III', age: '23', email: 'test9@test.com' },
+                { id: '10', name: 'JJJ', age: '22', email: 'test10@test.com' }
+            ];
+
+            $('#grid').jqGrid({
+                caption: 'grid',
+                url: "mdata.json",
+                datatype: "json",
+                //data: mydata,
+                //datatype: 'local',
+                mtype: 'GET',
+                ajaxGridOptions: { contentType: 'application/json; charset=utf-8' },
+                viewrecords: true,
+                height: 120,
+                colNames: ['Id', 'Name', 'Age', 'Email', 'formattest'],
+                rowNum: 6,
+                rowList: [6, 10],
+                // multiselect: true,
+                colModel: [
+                    { name: 'id', index: 'id', key: true, editable: true, frozen: true },
+                    { name: 'name', index: 'name', editable: true },
+                    { name: 'age', index: 'age', editable: true },
+                    { name: 'email', index: 'email', editable: true, formatter: 'email' },
+                    { name: 'age', formatter: function (data) { if (data > 20) return ">20"; else return "20<"; } },
+                ],
+                pager: '#pager',
+                editurl: '/test',
+                subGrid: true,
+                subGridRowExpanded: function (subgridId, rowId) {
+                    alert(subgridId + ' ' + rowId);
+                },
+                //pgbuttons: true,
+                //pginput: true,
+                //pgtext: true,
+                //jsonReader: {
+                //    repeatitems: false,
+                //    id: "0"
+                //},
+                shrinkToFit: false,
+                ondblClickRow: function (id) { alert(id); },
+                onSortCol: function (name, index) { alert("column name:  " + name); }
+            });
+            $("#grid").jqGrid('setFrozenColumns');
+
+
+            $("#grid").jqGrid('navGrid', "#pager");
+            //$("#grid").jqGrid('inlineNav', "#pager");
+
+            $('#add').click(function () {
+                $('#grid').jqGrid('addRowData', 11, { id: '11', name: 'KKK', age: '22', email: 'test11@test.com' });
+                $("#grid").jqGrid('setSelection', "11");
+            });
+            $('#edit').click(function () {
+                key = $('#grid').jqGrid('getGridParam', 'selrow');
+                $('#grid').jqGrid('setRowData', key, { name: 'changed', age: '22', email: 'changed@changed.com' });
+
+            });
+            $('#delete').click(function () {
+                key = $('#grid').jqGrid('getGridParam', 'selrow');
+                $('#grid').jqGrid('delRowData', key);
+            });
+
+
+            $('#rowadd').click(function () {
+                $('#grid').jqGrid('addRowData', "0", { id: '', name: '', age: '', email: '' });
+                $('#grid').jqGrid('editRow', "0");
+                $("#grid").jqGrid('setSelection', "0");
+                //   $('#grid').jqGrid('saveRow', "0")
+            });
+            $('#rowedit').click(function () {
+                key = $('#grid').jqGrid('getGridParam', 'selrow');
+                $('#grid').jqGrid('editRow', key);
+                // $('#grid').jqGrid('saveRow', key)
+
+            });
+            $('#save').click(function () {
+                key = $('#grid').jqGrid('getGridParam', 'selrow');
+                $('#grid').jqGrid('saveRow', key);
+            });
+            $('#cancel').click(function () {
+                key = $('#grid').jqGrid('getGridParam', 'selrow');
+                var data = $('#grid').jqGrid('getRowData', key);
+                if (data.id == 0) {
+                    $('#grid').jqGrid('delRowData', key);
+                } else {
+                    $('#grid').jqGrid('restoreRow', key);
+                }
+            });
+
+            $('#w_add').click(function () {
+                $('#grid').jqGrid('editGridRow', "new", { height: 250, reloadAfterSubmit: false });
+            });
+            $('#w_edit').click(function () {
+                key = $('#grid').jqGrid('getGridParam', 'selrow');
+                $('#grid').jqGrid('editGridRow', key, { height: 250, reloadAfterSubmit: false });
+
+            });
+            $('#w_delete').click(function () {
+                key = $('#grid').jqGrid('getGridParam', 'selrow');
+                $('#grid').jqGrid('delGridRow', key, { reloadAfterSubmit: false });
+            });
+        });
+    </script>
+</body>
+</html>
