@@ -1,0 +1,116 @@
+<html>
+<body>
+    <script type="text/javascript">
+
+        function Vehicle(id, name, color) {
+            var _name = name;
+            var _color = color;
+            var _id = id;
+            this.value = "vehicle";
+            Vehicle.count = ++Vehicle.count || 1;
+
+            Object.defineProperty(this, "id", {
+                get: function () {
+                    return _id;
+                },
+                set: function () {
+                    alert('you can\'t change the id ' + _id);
+                }
+            });
+
+            this.getInfo = function () {
+                return _id + " " + _name + " " + _color;
+            }
+
+        }
+        //Vehicle.prototype.desc = function () {
+        //    return this.value;
+        //};
+
+        var car1 = new Vehicle(1, "car1", 'blue');
+        var car2 = new Vehicle(2, "car2", 'blue');
+        var car3 = new Vehicle(3, "car3", 'blue');
+        // alert(car.id);
+        //try {
+        //    car1.id = 123;
+        //    throw new Error("can't change id value");
+        //}
+        //catch (e) {
+        //    console.log(e);
+        //}
+
+        document.writeln(car1.getInfo() + "<br/>" + car2.getInfo() + "<br/>" + car3.getInfo() + "<br/>");
+        document.writeln(Vehicle.count + "<br/>");
+
+        var OBJ1 = function (val) {
+            this.obj1Value = val;
+        };
+
+        OBJ1.prototype.Value = function () {
+            return this.obj1Value;
+        };
+
+        OBJ1.prototype.prop = "prop";
+
+        OBJ1.prototype.Value2 = function () {
+            return this.obj1Value;
+        };
+
+        var OBJ2 = function (val) {
+            this.obj2Value = val;
+        };
+
+        var obj1 = new OBJ1("Obj1 value");
+        OBJ2.prototype = obj1;
+        //  OBJ3.prototype = obj1;
+        var obj2 = new OBJ2("Obj2 value");
+
+        document.write(obj2.Value2() + "<br/>");
+
+        document.write(obj2 instanceof OBJ1);
+        document.write("<br/>");
+        document.write(obj1.hasOwnProperty('obj1Value'));
+        document.write("<br/>");
+        document.write(obj2.hasOwnProperty('obj1Value'));
+
+        var OBJ3 = function () {
+            this.obj3Value = "";
+            throw new Error("obj for OBJ3 can't be created");
+        };
+        OBJ3.prototype.Value = function () {
+            return this.obj3Value;
+        };
+        //  var obj3 = new OBJ3("Obj3 value");
+        var OBJ4 = function (val) {
+            this.obj3Value = val;
+        };
+
+        OBJ4.prototype = Object.create(OBJ3.prototype);
+        var obj4 = new OBJ4("obj4");
+        document.write("<br/>");
+        document.write(obj4.Value());
+
+
+
+        //function Parent() {                                             //Polymorphism
+        //    this.Name = "";
+        //    throw new Error("Object cant be created");
+        //}
+
+        //Parent.prototype.getName = function () {
+        //    return this.Name;
+        //};
+
+        //function Child(name) {
+        //    this.Name = name;
+        //}
+
+        //Child.prototype = Object.create(Parent.prototype);
+
+        //var objChild = new Child("Name from Child");
+
+        //document.write(objChild.getName());
+
+    </script>
+</body>
+</html>
