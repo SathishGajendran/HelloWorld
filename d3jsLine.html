@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>D3JSLINE</title>
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<style type="text/css">
+			.axis path {
+			fill: none;
+			stroke: #777;
+			shape-rendering: crispEdges;
+			}
+			.axis text {
+			font-family: Lato;
+			font-size: 13px;
+			}
+		</style>
+	</head>
+	<body>
+		linechart <button onclick="updataData()"> updata data</button> <button onclick="animata()"> Animate</button><br/>
+		<svg id="chartArea" width="1000" height="500">
+		<path stroke="blue" stroke-width=2 fill="none"></path>
+	</svg>
+	<script >
+		var data = [{
+			"sale": "23",
+			"year": "2000"
+		}, {
+			"sale": "45",
+			"year": "2001"
+		}, {
+			"sale": "97",
+			"year": "2002"
+		}, {
+			"sale": "56",
+			"year": "2003"
+		}, {
+			"sale": "87",
+			"year": "2004"
+		}, {
+			"sale": "97",
+			"year": "2005"
+		}, {
+			"sale": "56",
+			"year": "2006"
+		}, {
+			"sale": "37",
+			"year": "2007"
+		}, {
+			"sale": "47",
+			"year": "2008"
+		}, {
+			"sale": "76",
+			"year": "2009"
+		}, {
+			"sale": "87",
+			"year": "2010"
+		}];
+		var chartArea = d3.select("#chartArea"),
+			WIDTH = 1000,
+			HEIGHT = 500,
+			MARGINS = {
+				top: 20,
+				right: 20,
+				bottom: 20,
+				left: 50
+			},
+			xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([2000, 2010]),
+			yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 100]),
+			xAxis = d3.svg.axis().scale(xScale),
+			yAxis = d3.svg.axis().scale(yScale).orient("left");
+		chartArea.append("svg:g")
+			.attr("class", "axis")
+			.attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+			.call(xAxis);
+		chartArea.append("svg:g")
+			.attr("class", "axis")
+			.attr("transform", "translate(" + (MARGINS.left) + ",0)")
+			.call(yAxis);
+		var lineGen = d3.svg.line()
+			.x(function(d) {
+				return xScale(d.year)
+			})
+			.y(function(d) {
+				return yScale(d.sale)
+			})
+			.interpolate('basis');
+		var drawLineChart = function(data) {
+			d3.select("#chartArea  > path")
+				.transition()
+				.attr('d', lineGen(data))
+		};
+		drawLineChart(data);
+		var updataData = function() {
+			// data.forEach(function(d, i) {
+			// 	d.sale = Math.floor((Math.random() * 100) + 1);
+			// });
+			for (var i = 0; i < data.length - 1; i++) {
+				data[i].sale = data[i + 1].sale;
+			}
+			data[data.length - 1].sale = Math.floor((Math.random() * 100) + 1);
+			drawLineChart(data);
+		};
+		var animata = function() {
+			// updataData();
+			// requestAnimationFrame(animata);
+
+			setInterval(function() {
+				updataData();
+			}, 300);
+		};
+
+		document.getElementById('chartArea').onmousedown = function() {
+			data[data.length - 1].sale = 100;
+		};
+	</script>
+</body>
+</html>
