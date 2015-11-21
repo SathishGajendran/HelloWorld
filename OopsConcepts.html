@@ -110,6 +110,33 @@
         //var objChild = new Child("Name from Child");
 
         //document.write(objChild.getName());
+        
+        //apply call bind
+        // function one(){
+        //     this.value="one";
+        //     this.get=function(){
+        //         return this.value;
+        //     }
+        //     this.print=function(val){
+        //         console.log(this.value+" "+val);
+        //     }
+        // }
+
+        // function two(){
+        //     this.value="two";
+        // }
+
+        // var f1= new one();
+        // var f2= new two();
+
+        // f1.get();
+        // f1.get.call(f2);
+
+        // f1.print(1);
+        // f1.print.apply(f2,[2]);
+
+        // var x= f1.print.bind(f2);
+        // x(2);
 
     </script>
 </body>
