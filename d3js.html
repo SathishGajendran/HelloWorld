@@ -4,10 +4,10 @@
 		<title>D3JS</title>
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	</head>
-	<body ng-controller="appCtrl" style="margin:0px">
+	<body style="margin:0px;overflow:hidden">
 		<script>
-			var width=window.innerWidth - 5;
-			var height=window.innerHeight - 5;
+			var width=1200;
+			var height=600;
 			d3.select("body")
 				.append('svg')
 				.attr('id', 'anim')
